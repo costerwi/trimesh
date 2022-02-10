@@ -144,14 +144,16 @@ def load_3DXML(file_obj, *args, **kwargs):
             (material_file, material_id) = material.attrib['id'].split(
                 'urn:3DXML:')[-1].split('#')
 
-            # triangle strips, sequence of arbitrary length lists
-            # np.fromstring is substantially faster than np.array(i.split())
-            # inside the list comprehension
-            strips = [np.fromstring(i, sep=' ', dtype=np.int64)
-                      for i in faces.attrib['strips'].split(',')]
+            strips = faces.get('strips')
+            if strips:
+                # triangle strips, sequence of arbitrary length lists
+                # np.fromstring is substantially faster than np.array(i.split())
+                # inside the list comprehension
+                stripList = [np.fromstring(i, sep=' ', dtype=np.int64)
+                          for i in faces.get('strips').split(',')]
 
-            # convert strips to (m,3) int
-            mesh_faces.append(util.triangle_strips_to_faces(strips))
+                # convert strips to (m,3) int
+                mesh_faces.append(util.triangle_strips_to_faces(stripList))
 
             # they mix delimiters like we couldn't figure it out from the
             # shape :(

@@ -155,6 +155,13 @@ def load_3DXML(file_obj, *args, **kwargs):
                 # convert strips to (m,3) int
                 mesh_faces.append(util.triangle_strips_to_faces(stripList))
 
+            triangles = faces.get('triangles')
+            if triangles:
+                mesh_faces.append(np.fromstring(
+                    triangles.replace(',', ' '),
+                    sep=' ',
+                    dtype=np.int64).reshape((-1, 3)))
+
             # they mix delimiters like we couldn't figure it out from the
             # shape :(
             # load vertices into (n, 3) float64

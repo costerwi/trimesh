@@ -44,11 +44,12 @@ def load_3DXML(file_obj, *args, **kwargs):
 
     # a dictionary of file name : lxml etree
     as_etree = {}
+    huge_parser = etree.XMLParser(huge_tree=True)
     for k, v in archive.items():
         # wrap in try statement, as sometimes 3DXML
         # contains non- xml files, like JPG previews
         try:
-            as_etree[k] = etree.XML(v.read())
+            as_etree[k] = etree.XML(v.read(), parser=huge_parser)
         except etree.XMLSyntaxError as e:
             # move the file object back to the file start
             util.log.warning(f"Error reading {k!r} {e!r}")

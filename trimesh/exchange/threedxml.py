@@ -49,8 +49,9 @@ def load_3DXML(file_obj, *args, **kwargs):
         # contains non- xml files, like JPG previews
         try:
             as_etree[k] = etree.XML(v.read())
-        except etree.XMLSyntaxError:
+        except etree.XMLSyntaxError as e:
             # move the file object back to the file start
+            util.log.warning(f"Error reading {k!r} {e!r}")
             v.seek(0)
 
     # the file name of the root scene
